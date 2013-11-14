@@ -1,0 +1,16 @@
+{
+  "curly": true,
+  "latedef": true,
+  "newcap": true,
+  "nonew": true,
+  "undef": true,
+  "trailing": true,
+  "indent": 2,
+  "quotmark": "double",
+  "unused": true,
+  "browser": true,
+  "maxerr": 1000,
+  "globals": {
+    "definedGlobal2": true
+   }
+}
