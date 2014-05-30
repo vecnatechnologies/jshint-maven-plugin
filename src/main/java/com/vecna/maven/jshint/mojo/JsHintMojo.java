@@ -32,6 +32,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.StringUtils;
 import org.mozilla.javascript.Function;
@@ -47,59 +50,70 @@ import com.vecna.maven.jshint.rhino.JsEngine;
 
 /**
  * JSHint plugin.
- * @goal check
- * @phase process-sources
  * @author ogolberg@vecna.com
  */
+@Mojo(name = "check",
+      defaultPhase = LifecyclePhase.PROCESS_SOURCES,
+      threadSafe = true)
 public class JsHintMojo extends AbstractMojo {
   /**
-   * @parameter default-value="jshint.js"
+   * Location of the JSHint source on the classpath. Only needs to be set if a custom version of JSHint is needed.
    */
+  @Parameter(defaultValue = "jshint.js")
   private String jsHintJS;
 
   /**
-   * @parameter default-value="${basedir}/src/main/javascript"
+   * Directory with the javascript files to be checked.
    */
+  @Parameter(defaultValue = "${basedir}/src/main/javascript")
   private File srcDirectory;
 
   /**
-   * @parameter
+   * List of file name patterns to include.
    */
+  @Parameter
   private String[] includes;
 
   /**
-   * @parameter
+   * List of file name patterns to exclude.
    */
+  @Parameter
   private String[] excludes;
 
   /**
-   * @parameter default-value="jshintrc"
+   * Location of the JSHint options file on the classpath or filesystem.
    */
+  @Parameter(defaultValue = "jshintrc")
   private String optionsFile;
 
   /**
-   * @parameter
+   * JSHint options (these take priority over the options file).
    */
+  @Parameter
   private Map<String, String> options;
 
   /**
-   * @parameter
+   * Allowed globals (these take priority over the options file).
    */
+  @Parameter
   private Map<String, String> globals;
 
   /**
-   * @parameter default-value="0"
+   * Maximum number of JSHint violations. Exceeding this will fail the build.
    */
+  @Parameter(defaultValue = "0")
   private int maxErrorsAllowed;
 
   /**
-   * @parameter
+   * Whether to skip execution.
    */
+  @Parameter
   private boolean skip;
 
   /**
-   * @parameter default-value="${project.build.directory}/jshint.xml"
+   * Location of the violation report.
    */
+  @Parameter(defaultValue = "${project.build.directory}/jshint.xml")
   private File reportOutput;
 
   private final JsHintReporter reporter = new JsHintCheckstyleReporter();
